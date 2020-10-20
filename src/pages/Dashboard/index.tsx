@@ -1,24 +1,59 @@
-import React from 'react';
+import React, {FormEvent, useState} from 'react';
 import {Title, Form, Repositories} from './style'
+import { FiChevronRight } from 'react-icons/fi';
 import Logo from '../../assets/logo.svg'
+import api from '../../service/api'
+
+interface RepositoryDTO {
+  id: number;
+  full_name: string;
+  description: string;
+  owner: {
+    login: string;
+    avatar_url: string;
+  };
+}
 
 const Dashboard: React.FC = () => {
+  const [newRepo, setNewRepo] = useState('')
+  const [repositories, setRepositories] = useState<RepositoryDTO[]>([])
+
+
+
+  async function handle(e: FormEvent<HTMLFormElement>): Promise<void> {
+    e.preventDefault();
+    
+    const response = await api.get<RepositoryDTO>(`/repos/${newRepo}`)
+    const {data} = response
+
+    setRepositories([...repositories, data])
+    
+    setNewRepo('');
+  
+  }
+
+
   return (
     <>
     <img src={Logo} alt="logo of aplication"/>
     <Title>Explore repositories on Github</Title>
-    <Form>
-      <input type="text" placeholder="Text here"/>
+    <Form onSubmit={handle}>
+      <input type="text" value={newRepo} placeholder="Text here" onChange={(e) => setNewRepo(e.target.value)} />
       <button type="submit">Search</button>
     </Form>
     <Repositories>
-    <a href="test">
-      <img src="https://avatars3.githubusercontent.com/u/19610639?s=460&u=beeb3184574cb7862579a00ccfe2dfc935b6f00e&v=4" alt="Álvaro Bianor" />
-      <div>
-        <strong>Alvim rei delas</strong>
-        <p>Caba bom desenrolado</p>
-      </div>
-    </a>
+    {
+      repositories.map(data => (
+        <a key={data.id} href="test">
+          <img src={data.owner.avatar_url} alt="Álvaro Bianor" />
+          <div>
+            <strong>{data.full_name}</strong>
+            <p>{data.description}</p>
+          </div>
+          <FiChevronRight />
+        </a>
+      ))
+    }
             
     </Repositories>
     </>
