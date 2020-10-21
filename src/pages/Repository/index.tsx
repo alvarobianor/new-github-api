@@ -1,8 +1,8 @@
 
-import React, { useState, useEffect } from 'react';
+import React  from 'react';
 import { useRouteMatch, Link } from 'react-router-dom';
 import { FiChevronsLeft, FiChevronRight } from 'react-icons/fi';
-import api from '../../service/api';
+
 import { Header, RepositoryInfo, Issue } from './style';
 import imgLogo from '../../assets/logo.svg';
 
@@ -10,35 +10,9 @@ interface Params {
   repository: string;
 }
 
-interface IssueDTO {
-  id: number;
-  number: number;
-  title: string;
-  user: {
-    login: string;
-    url_avatar: string;
-  };
-  state: string;
-  html_url: string;
-}
-
-interface RepositoryDTO {
-  id: number;
-  full_name: string;
-  description: string;
-  owner: {
-    login: string;
-    avatar_url: string;
-  };
-  stargazers_count: number;
-  forks_count: number;
-  open_issues_count: number;
-}
 
 const Repository: React.FC = () => {
   const { params } = useRouteMatch<Params>();
-
-  
 
   return (
     <>
@@ -56,7 +30,7 @@ const Repository: React.FC = () => {
             <img src="https://avatars1.githubusercontent.com/u/6128107?v=4" 
             alt="human" />
             <div>
-              <strong>Ai</strong>
+              <strong>{params.repository}</strong>
               <p>Papaaaaai</p>
             </div>
           </header>
